@@ -46,7 +46,7 @@ func LookupList(c fiber.Ctx) error {
 // @Param        sort               query      string  false  "sort"
 // @Security BearerAuth
 // @Success 200 {array} model.CommonSetup
-// @Router /api/ciethnic-groupsies [get]
+// @Router /api/ethnic-groups [get]
 func List(c fiber.Ctx) error {
     page := c.Query("_page", "1")
     limit := c.Query("_limit", "20")

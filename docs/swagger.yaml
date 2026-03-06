@@ -299,34 +299,6 @@ paths:
       - BearerAuth: []
       tags:
       - Auth
-  /api/ciethnic-groupsies:
-    get:
-      parameters:
-      - description: _page
-        in: query
-        name: _page
-        type: string
-      - description: _limit
-        in: query
-        name: _limit
-        type: string
-      - description: sort
-        in: query
-        name: sort
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.CommonSetup'
-            type: array
-      security:
-      - BearerAuth: []
-      tags:
-      - Setup/EthnicGroup
   /api/cities:
     get:
       parameters:
@@ -1366,6 +1338,33 @@ paths:
       tags:
       - Setup/EthnicGroup
   /api/ethnic-groups:
+    get:
+      parameters:
+      - description: _page
+        in: query
+        name: _page
+        type: string
+      - description: _limit
+        in: query
+        name: _limit
+        type: string
+      - description: sort
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.CommonSetup'
+            type: array
+      security:
+      - BearerAuth: []
+      tags:
+      - Setup/EthnicGroup
     post:
       parameters:
       - description: _page

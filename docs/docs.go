@@ -271,52 +271,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/ciethnic-groupsies": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Setup/EthnicGroup"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "_page",
-                        "name": "_page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "_limit",
-                        "name": "_limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "sort",
-                        "name": "sort",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.CommonSetup"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/cities": {
             "get": {
                 "security": [
@@ -2039,6 +1993,50 @@ const docTemplate = `{
             }
         },
         "/api/ethnic-groups": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Setup/EthnicGroup"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "_page",
+                        "name": "_page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "_limit",
+                        "name": "_limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sort",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CommonSetup"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
