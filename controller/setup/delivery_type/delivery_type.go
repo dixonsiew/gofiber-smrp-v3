@@ -166,9 +166,9 @@ func Create(c fiber.Ctx) error {
     }
 
     o := model.CommonSetup{
-        Code:      data.Code,
-        Desc:      data.Desc,
-        Ref:       data.Ref,
+        Code:      utils.NewNullString(data.Code),
+        Desc:      utils.NewNullString(data.Desc),
+        Ref:       utils.NewNullString(data.Ref),
         CreatedBy: user.Id,
     }
     cs.Save(o, table)
@@ -242,9 +242,9 @@ func Update(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusNotFound, "Record not found")
     }
 
-    o.Code = data.Code
-    o.Desc = data.Desc
-    o.Ref = data.Ref
+    o.Code = utils.NewNullString(data.Code)
+    o.Desc = utils.NewNullString(data.Desc)
+    o.Ref = utils.NewNullString(data.Ref)
     o.ModifiedBy = user.Id
     cs.Update(*o, table)
     return c.JSON(fiber.Map{
@@ -262,7 +262,7 @@ func Update(c fiber.Ctx) error {
 // @Router /api/delivery-type/{id} [delete]
 func Delete(c fiber.Ctx) error {
     ids := c.Params("id")
-    id, _ := strconv.Atoi(ids)
+    id, _ := strconv.ParseInt(ids, 10, 64)
     _, user, err := middleware.ValidateToken(c)
     if err != nil {
         return err
@@ -272,7 +272,7 @@ func Delete(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusUnauthorized, "User not found")
     }
 
-    err = cs.DeleteById(id, user.Id, table)
+    err = cs.DeleteById(id, user.Id.Int64, table)
     if err != nil {
         return err
     }

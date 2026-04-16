@@ -42,7 +42,7 @@ func JsonRH101(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusNotFound, "User not found")
     }
 
-    username := user.Username
+    username := user.Username.String
     cli := database.GetMongoClient()
     col := getCollection(cli, username, "1")
     ls, err := u.GetCollectionList(database.GetMongoCtx(), col)
@@ -177,7 +177,7 @@ func JsonPD101(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusNotFound, "User not found")
     }
 
-    username := user.Username
+    username := user.Username.String
     cli := database.GetMongoClient()
     col := getCollection(cli, username, "0")
     ls, err := u.GetCollectionList(database.GetMongoCtx(), col)
@@ -321,7 +321,7 @@ func Xlsx(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusNotFound, "User not found")
     }
 
-    username := user.Username
+    username := user.Username.String
     cli := database.GetMongoClient()
     col := getCollection(cli, username, vt)
     lx, err := u.GetCollectionList(database.GetMongoCtx(), col)
@@ -462,7 +462,7 @@ func SearchList(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusBadRequest, err.Error())
     }
 
-    username := user.Username
+    username := user.Username.String
     md, err := queryAndSave(*data, username)
     if err != nil {
         return err
@@ -492,7 +492,7 @@ func Edit(c fiber.Ctx) error {
 
     ids := c.Params("id")
     vt := c.Query("vt", "0")
-    username := user.Username
+    username := user.Username.String
     cli := database.GetMongoClient()
     col := getCollection(cli, username, vt)
     id, err := bson.ObjectIDFromHex(ids)
@@ -542,7 +542,7 @@ func Update(c fiber.Ctx) error {
 
     ids := c.Params("id")
     vt := c.Query("vt", "0")
-    username := user.Username
+    username := user.Username.String
     cli := database.GetMongoClient()
     col := getCollection(cli, username, vt)
     id, err := bson.ObjectIDFromHex(ids)

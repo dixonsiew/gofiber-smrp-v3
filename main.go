@@ -92,7 +92,7 @@ func main() {
 }
 
 func initSwagger(app *fiber.App, basePath string) {
-    b, _ := os.ReadFile("./public/css/theme-feeling-blue.css")
+    b, _ := os.ReadFile("./public/css/theme-flattop.css")
     css := string(b)
 
     cfg := swaggo.Config{

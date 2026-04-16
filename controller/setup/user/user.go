@@ -143,7 +143,7 @@ func Create(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusBadRequest, "A user with that username already exists")
     }
 
-    role, err := roleService.FindById(data.RoleId)
+    role, err := roleService.FindById(int64(data.RoleId))
     if err != nil {
         return err
     }
@@ -153,10 +153,10 @@ func Create(c fiber.Ctx) error {
     }
 
     o := model.User{
-        Username:  data.Username,
-        Password:  data.Password,
-        Firstname: data.Firstname,
-        Lastname:  data.Lastname,
+        Username:  utils.NewNullString(data.Username),
+        Password:  utils.NewNullString(data.Password),
+        Firstname: utils.NewNullString(data.Firstname),
+        Lastname:  utils.NewNullString(data.Lastname),
         Roles:     []model.Role{*role},
     }
     userService.Save(o)
@@ -175,7 +175,7 @@ func Create(c fiber.Ctx) error {
 // @Router /api/user/{id} [get]
 func Edit(c fiber.Ctx) error {
     ids := c.Params("id")
-    id, _ := strconv.Atoi(ids)
+    id, _ := strconv.ParseInt(ids, 10, 64)
     o, err := userService.FindById(id)
     if err != nil {
         return err
@@ -199,7 +199,7 @@ func Edit(c fiber.Ctx) error {
 // @Router /api/user/{id} [put]
 func Update(c fiber.Ctx) error {
     ids := c.Params("id")
-    id, _ := strconv.Atoi(ids)
+    id, _ := strconv.ParseInt(ids, 10, 64)
     data := new(dto.UserDto)
     if err := c.Bind().Body(data); err != nil {
         if validationErrors, ok := err.(validator.ValidationErrors); ok {
@@ -223,7 +223,7 @@ func Update(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusBadRequest, "A user with that username already exists")
     }
 
-    role, err := roleService.FindById(data.RoleId)
+    role, err := roleService.FindById(int64(data.RoleId))
     if err != nil {
         return err
     }
@@ -233,16 +233,16 @@ func Update(c fiber.Ctx) error {
     }
 
     o := model.User{
-        Id:        id,
-        Username:  username,
-        Password:  "",
-        Firstname: data.Firstname,
-        Lastname:  data.Lastname,
+        Id:        utils.NewInt64(id),
+        Username:  utils.NewNullString(data.Username),
+        Password:  utils.NewNullString(""),
+        Firstname: utils.NewNullString(data.Firstname),
+        Lastname:  utils.NewNullString(data.Lastname),
         Roles:     []model.Role{*role},
     }
 
     if password != "********" {
-        o.Password = password
+        o.Password = utils.NewNullString(password)
     }
 
     userService.Update(o)
@@ -261,7 +261,7 @@ func Update(c fiber.Ctx) error {
 // @Router /api/user/{id} [delete]
 func Delete(c fiber.Ctx) error {
     ids := c.Params("id")
-    id, _ := strconv.Atoi(ids)
+    id, _ := strconv.ParseInt(ids, 10, 64)
     err := userService.DeleteById(id)
     if err != nil {
         return err

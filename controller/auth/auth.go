@@ -50,7 +50,7 @@ func Login(c fiber.Ctx) error {
     }
 
     a := *user
-    userService.UpdateLastLogin(a.Id)
+    userService.UpdateLastLogin(a.Id.Int64)
     token, err := tokenService.GenerateAccessToken(a)
     refreshToken, errx := tokenService.GenerateRefreshToken(a)
     if err != nil {
@@ -166,7 +166,7 @@ func ChangePassword(c fiber.Ctx) error {
     }
 
     a := *user
-    a.Password = data.Password
+    a.Password = utils.NewNullString(data.Password)
     userService.UpdatePassword(a)
     return c.JSON(fiber.Map{
         "success": 1,

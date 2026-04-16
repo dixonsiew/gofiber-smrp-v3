@@ -7,21 +7,22 @@ import (
     "smrp/utils"
     "time"
 
-    "github.com/jackc/pgx/v5/pgxpool"
+    "github.com/jmoiron/sqlx"
+    _ "github.com/lib/pq"
     "go.mongodb.org/mongo-driver/v2/mongo"
     "go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-var dbVar *pgxpool.Pool
+var dbVar *sqlx.DB
 var ctx = context.Background()
 var clientVar *mongo.Client
 var ctxm = context.TODO()
 
-func SetDb(db *pgxpool.Pool) {
+func SetDb(db *sqlx.DB) {
     dbVar = db
 }
 
-func GetDb() *pgxpool.Pool {
+func GetDb() *sqlx.DB {
     if dbVar == nil {
         ConnectDB()
     }
@@ -35,22 +36,16 @@ func GetCtx() context.Context {
 
 func ConnectDB() {
     name := config.Config("postgres.db")
-    cfg, err := pgxpool.ParseConfig(fmt.Sprintf("postgres://postgres:postgres@localhost:5432/%s", name))
-    if err != nil {
-        utils.LogError(err)
-        return
-    }
-
-    cfg.MaxConns = 10
-    cfg.MinConns = 2
-    cfg.MaxConnLifetime = time.Hour
-    cfg.MaxConnIdleTime = 30 * time.Minute
-
-    pool, err := pgxpool.NewWithConfig(ctx, cfg)
+    connStr := fmt.Sprintf("postgres://postgres:postgres@localhost:5432/%s?sslmode=disable", name)
+    db, err := sqlx.Connect("postgres", connStr)
     if err != nil {
         utils.LogError(err)
     } else {
-        SetDb(pool)
+        db.SetMaxOpenConns(10)
+        db.SetMaxIdleConns(5)
+        db.SetConnMaxLifetime(time.Hour)
+        db.SetConnMaxIdleTime(30 * time.Minute)
+        SetDb(db)
     }
 }
 

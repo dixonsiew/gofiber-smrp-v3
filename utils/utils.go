@@ -14,6 +14,7 @@ import (
 
     "github.com/go-playground/validator/v10"
     "github.com/gofiber/fiber/v3"
+    "github.com/guregu/null/v6"
     "github.com/nleeper/goment"
     "github.com/rs/zerolog"
     "github.com/xuri/excelize/v2"
@@ -107,6 +108,25 @@ func GetDateStr(v any) string {
 
 func GetDateTimeStr(s string) string {
     return strings.ReplaceAll(s, "Z", "")
+}
+
+func NewNullString(s string) null.String {
+    if s == "" {
+        return null.NewString(s, false)
+    }
+    return null.NewString(s, true)
+}
+
+func NewInt32(i int32) null.Int32 {
+    return null.NewInt32(i, true)
+}
+
+func NewInt64(i int64) null.Int64 {
+    return null.NewInt(i, true)
+}
+
+func NewFloat(f float64) null.Float {
+    return null.NewFloat(f, true)
 }
 
 func SetValue(x bson.M, ofield string, srcField string) {

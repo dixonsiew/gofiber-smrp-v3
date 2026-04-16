@@ -13,7 +13,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func DecodeToken(c fiber.Ctx) (string, int, error) {
+func DecodeToken(c fiber.Ctx) (string, int64, error) {
     tokenStr := c.Get("Authorization")
     tokenStr = strings.ReplaceAll(tokenStr, "Bearer ", "")
     token, err := jwt.ParseWithClaims(tokenStr, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -32,7 +32,7 @@ func DecodeToken(c fiber.Ctx) (string, int, error) {
 
     sub := (*claims)["subject"].(string)
     username := (*claims)["username"].(string)
-    id, _ := strconv.Atoi(sub)
+    id, _ := strconv.ParseInt(sub, 10, 64)
     return username, id, nil
 }
 
@@ -99,7 +99,7 @@ func CreateAccessTokenFromRefreshToken(refresh string) (fiber.Map, error) {
     }, nil
 }
 
-func decodeRefreshToken(tokenStr string) (string, int, error) {
+func decodeRefreshToken(tokenStr string) (string, int64, error) {
     token, err := jwt.ParseWithClaims(tokenStr, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
         return []byte(utils.JWT_SECRET), nil
     })
@@ -116,10 +116,10 @@ func decodeRefreshToken(tokenStr string) (string, int, error) {
 
     sub := (*claims)["subject"].(string)
     username := (*claims)["username"].(string)
-    id, _ := strconv.Atoi(sub)
+    id, _ := strconv.ParseInt(sub, 10, 64)
     return username, id, nil
 }
 
-func getUserFromRefreshTokenPayload(id int) (*model.User, error) {
+func getUserFromRefreshTokenPayload(id int64) (*model.User, error) {
     return userService.FindById(id)
 }

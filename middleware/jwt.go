@@ -25,7 +25,7 @@ func JWTProtected(c fiber.Ctx) error {
     })(c)
 }
 
-func ValidateToken(c fiber.Ctx) (int, *model.User, error) {
+func ValidateToken(c fiber.Ctx) (int64, *model.User, error) {
     _, id, err := tokenService.DecodeToken(c)
     if err != nil {
         return id, nil, err

@@ -119,7 +119,7 @@ func getCode(key string, doc bson.M, table string) string {
     if s != "" {
         o, err := cs.FindByDesc(s, table)
         if err == nil && o != nil {
-            x = o.Code
+            x = o.Code.String
         }
     }
 
