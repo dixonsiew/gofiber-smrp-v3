@@ -39,7 +39,7 @@ func DecodeToken(c fiber.Ctx) (string, int64, error) {
 func GenerateAccessToken(user model.User) (string, error) {
     claims := jwt.MapClaims{
         "username": user.Username,
-        "subject":  fmt.Sprintf("%d", user.Id),
+        "subject":  fmt.Sprintf("%d", user.Id.Int64),
         "exp":      time.Now().Add(time.Hour * 720).Unix(),
     }
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -55,7 +55,7 @@ func GenerateAccessToken(user model.User) (string, error) {
 func GenerateRefreshToken(user model.User) (string, error) {
     claims := jwt.MapClaims{
         "username": user.Username,
-        "subject":  fmt.Sprintf("%d", user.Id),
+        "subject":  fmt.Sprintf("%d", user.Id.Int64),
         "exp":      time.Now().Add(time.Hour * 87600).Unix(),
     }
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
