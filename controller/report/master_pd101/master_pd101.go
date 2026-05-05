@@ -253,7 +253,7 @@ func JsonPD101(c fiber.Ctx) error {
     }
 
     facilityCode := config.Config("facilityCode")
-    filename := fmt.Sprintf("%s_%s_PD101.json", ds1, ds2)
+    filename := fmt.Sprintf("%s_%s_%s_PD101.json", facilityCode, ds1, ds2)
 
     c.Set(fiber.HeaderContentDisposition, fmt.Sprintf("attachment; filename=%s", filename))
     c.Set(fiber.HeaderCacheControl, "no-cache, no-store, must-revalidate")
