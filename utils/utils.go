@@ -88,7 +88,7 @@ func GetErrors(errs []error) string {
 }
 
 func GetDateStr(v any) string {
-    o := GetStr(v)
+    o := ""
     k := reflect.TypeOf(v)
     if k.String() == "bson.DateTime" {
         iv, _ := strconv.Atoi(o)
@@ -96,10 +96,18 @@ func GetDateStr(v any) string {
         g, _ := goment.New(t)
         gs := g.Format("YYYY-MM-DD")
         o = gs
+    } else {
+        o = GetStr(v)
     }
 
     s := o
     if len(o) >= 10 {
+        i := strings.Index(s, "/")
+        if i > 0 {
+            g, _ := goment.New(s, "D/M/YYYY")
+            gs := g.Format("YYYY-MM-DD")
+            o = gs
+        }
         s = o[0:10]
     }
 
