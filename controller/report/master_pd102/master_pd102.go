@@ -145,7 +145,7 @@ func JsonPD101(c fiber.Ctx) error {
     }
 
     facilityCode := config.Config("facilityCode")
-    filename := fmt.Sprintf("%s_%s_PD102.json", ds1, ds2)
+    filename := fmt.Sprintf("%s_%s_%s_PD102.json", facilityCode, ds1, ds2)
 
     c.Set(fiber.HeaderContentDisposition, fmt.Sprintf("attachment; filename=%s", filename))
     c.Set(fiber.HeaderCacheControl, "no-cache, no-store, must-revalidate")
@@ -214,7 +214,7 @@ func Xlsx(c fiber.Ctx) error {
     pf := "PD102"
 
     facilityCode := config.Config("facilityCode")
-    filename := fmt.Sprintf("%s_%s_%s_%s.xlsx",facilityCode, ds1, ds2, pf)
+    filename := fmt.Sprintf("%s_%s_%s_%s.xlsx", facilityCode, ds1, ds2, pf)
     bx, err := u.GetXlsx(COLUMN_MAP, lx)
     if err != nil {
         u.LogError(err)
