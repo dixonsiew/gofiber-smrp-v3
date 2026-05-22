@@ -383,7 +383,7 @@ func List(c fiber.Ctx) error {
         return fiber.NewError(fiber.StatusNotFound, "User not found")
     }
 
-    username := user.Username
+    username := user.Username.String
     cli := database.GetMongoClient()
     db := getDb(cli, vt)
     col := db.Collection(fmt.Sprintf("__%s__", username))
