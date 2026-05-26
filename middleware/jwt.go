@@ -1,14 +1,16 @@
 package middleware
 
 import (
-    "smrp/model"
-    userService "smrp/service/user"
-    tokenService "smrp/service/token"
-    "smrp/utils"
+	"fmt"
+	"smrp/model"
+	tokenService "smrp/service/token"
+	userService "smrp/service/user"
+	"smrp/utils"
+	"strings"
 
-    jwtware "github.com/gofiber/contrib/v3/jwt"
-    "github.com/gofiber/fiber/v3"
-    "github.com/gofiber/fiber/v3/extractors"
+	jwtware "github.com/gofiber/contrib/v3/jwt"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/extractors"
 )
 
 func JWTProtected(c fiber.Ctx) error {
@@ -23,6 +25,53 @@ func JWTProtected(c fiber.Ctx) error {
             })
         },
     })(c)
+}
+
+func HttpProtected(c fiber.Ctx) error {
+    token := c.Cookies("token")
+    fmt.Println(token)
+    if token == "" {
+        authHeader := c.Get(fiber.HeaderAuthorization)
+        if authHeader != "" {
+            parts := strings.Split(authHeader, " ")
+            if len(parts) == 2 && parts[0] == "Bearer" {
+                token = parts[1]
+            }
+        }
+    }
+
+    if token == "" {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "statusCode": fiber.StatusUnauthorized,
+            "message":    "Unauthorized",
+        })
+    }
+
+    userId, user, err := ValidateTokenStr(token)
+    if err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "statusCode": fiber.StatusUnauthorized,
+            "message":    "Invalid or expired token",
+        })
+    }
+
+    c.Locals("userId", userId)
+    c.Locals("username", user.Username)
+    return c.Next()
+}
+
+func ValidateTokenStr(token string) (int64, *model.User, error) {
+    _, id, err := tokenService.DecodeTokenStr(token)
+    if err != nil {
+        return id, nil, err
+    }
+
+    user, err := userService.FindById(id)
+    if err != nil || user == nil {
+        return id, user, err
+    }
+
+    return id, user, nil
 }
 
 func ValidateToken(c fiber.Ctx) (int64, *model.User, error) {

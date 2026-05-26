@@ -60,6 +60,7 @@ func main() {
     app.Use(recover.New())
     app.Use(compress.New())
     app.Use(cors.New(cors.Config{
+        AllowCredentials: false,
         AllowOrigins:  []string{"*"},
         ExposeHeaders: []string{"Authorization", "filename", utils.X_TOTAL_COUNT, utils.X_TOTAL_PAGE},
     }))

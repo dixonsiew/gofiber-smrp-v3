@@ -13,6 +13,27 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+func DecodeTokenStr(tokenStr string) (string, int64, error) {
+    token, err := jwt.ParseWithClaims(tokenStr, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+        return []byte(utils.JWT_SECRET), nil
+    })
+
+    if err != nil {
+        utils.LogError(err)
+        return "", 0, err
+    }
+
+    claims, ok := token.Claims.(*jwt.MapClaims)
+    if !ok {
+        return "", 0, fmt.Errorf("could not parse claims")
+    }
+
+    sub := (*claims)["subject"].(string)
+    username := (*claims)["username"].(string)
+    id, _ := strconv.ParseInt(sub, 10, 64)
+    return username, id, nil
+}
+
 func DecodeToken(c fiber.Ctx) (string, int64, error) {
     tokenStr := c.Get("Authorization")
     tokenStr = strings.ReplaceAll(tokenStr, "Bearer ", "")

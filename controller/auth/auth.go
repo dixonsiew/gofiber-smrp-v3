@@ -11,6 +11,81 @@ import (
     "github.com/gofiber/fiber/v3"
 )
 
+// LoginHttp
+//
+// @Tags Auth
+// @Produce json
+// @Param request body dto.LoginDto true "Login Request"
+// @Success 200
+// @Router /o/token-http [post]
+func LoginHttp(c fiber.Ctx) error {
+    data := new(dto.LoginDto)
+    mx := fiber.Map{
+        "statusCode": fiber.StatusUnauthorized,
+        "message":    "Invalid Credentials",
+    }
+    if err := c.Bind().Body(data); err != nil {
+        if validationErrors, ok := err.(validator.ValidationErrors); ok {
+            errs := utils.GetValidationErrors(validationErrors)
+            if errs != nil {
+                return c.Status(fiber.StatusUnauthorized).JSON(mx)
+            }
+        }
+
+        return c.Status(fiber.StatusUnauthorized).JSON(mx)
+    }
+
+    user, err := userService.FindByUsername(data.Username)
+    if err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(mx)
+    }
+
+    valid := false
+    if user != nil {
+        valid = userService.ValidateCredentials(*user, data.Password)
+    }
+
+    if !valid {
+        return c.Status(fiber.StatusUnauthorized).JSON(mx)
+    }
+
+    a := *user
+    userService.UpdateLastLogin(a.Id.Int64)
+    token, err := tokenService.GenerateAccessToken(a)
+    refreshToken, errx := tokenService.GenerateRefreshToken(a)
+    if err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(mx)
+    }
+
+    if errx != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(mx)
+    }
+
+    c.Cookie(&fiber.Cookie{
+        Name:     "token",
+        Value:    token,
+        HTTPOnly: true,
+        Secure:   false,
+        SameSite: "Lax",
+        Path:     "/",
+        MaxAge:   24 * 60 * 60,
+    })
+
+    c.Cookie(&fiber.Cookie{
+        Name:     "refreshToken",
+        Value:    refreshToken,
+        HTTPOnly: true,
+        Secure:   false,
+        SameSite: "Lax",
+        Path:     "/o/refresh-token",
+        MaxAge:   7 * 24 * 60 * 60,
+    })
+
+    return c.JSON(fiber.Map{
+        "message": "Login successful",
+    })
+}
+
 // Login
 //
 // @Tags Auth
@@ -123,11 +198,11 @@ func UserDetails(c fiber.Ctx) error {
 
     a := *user
     return c.JSON(fiber.Map{
-        "id": a.Id,
-        "username": a.Username,
+        "id":         a.Id,
+        "username":   a.Username,
         "first_name": a.Firstname,
-        "last_name": a.Lastname,
-        "roles": a.Roles,
+        "last_name":  a.Lastname,
+        "roles":      a.Roles,
     })
 }
 
