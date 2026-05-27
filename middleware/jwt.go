@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"smrp/model"
 	tokenService "smrp/service/token"
 	userService "smrp/service/user"
@@ -14,29 +13,26 @@ import (
 )
 
 func JWTProtected(c fiber.Ctx) error {
-    return jwtware.New(jwtware.Config{
-        SigningKey: jwtware.SigningKey{Key: []byte(utils.JWT_SECRET)},
-        //ContextKey: "jwt",
-        Extractor:  extractors.FromAuthHeader("Bearer"),
-        ErrorHandler: func(c fiber.Ctx, err error) error {
-            return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-                "statusCode": fiber.StatusUnauthorized,
-                "message":    "Unauthorized",
-            })
-        },
-    })(c)
-}
+    authHeader := c.Get(fiber.HeaderAuthorization)
+    if authHeader != "" {
+        return jwtware.New(jwtware.Config{
+            SigningKey: jwtware.SigningKey{Key: []byte(utils.JWT_SECRET)},
+            //ContextKey: "jwt",
+            Extractor: extractors.FromAuthHeader("Bearer"),
+            ErrorHandler: func(c fiber.Ctx, err error) error {
+                return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+                    "statusCode": fiber.StatusUnauthorized,
+                    "message":    "Unauthorized",
+                })
+            },
+        })(c)
+    }
 
-func HttpProtected(c fiber.Ctx) error {
     token := c.Cookies("token")
-    fmt.Println(token)
     if token == "" {
         authHeader := c.Get(fiber.HeaderAuthorization)
         if authHeader != "" {
-            parts := strings.Split(authHeader, " ")
-            if len(parts) == 2 && parts[0] == "Bearer" {
-                token = parts[1]
-            }
+            token = strings.ReplaceAll(authHeader, "Bearer ", "")
         }
     }
 

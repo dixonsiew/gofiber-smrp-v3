@@ -1,16 +1,16 @@
 package token
 
 import (
-	"fmt"
-	"smrp/model"
-	userService "smrp/service/user"
-	"smrp/utils"
-	"strconv"
-	"strings"
-	"time"
+    "fmt"
+    "smrp/model"
+    userService "smrp/service/user"
+    "smrp/utils"
+    "strconv"
+    "strings"
+    "time"
 
-	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
+    "github.com/gofiber/fiber/v3"
+    "github.com/golang-jwt/jwt/v5"
 )
 
 func DecodeTokenStr(tokenStr string) (string, int64, error) {
@@ -35,8 +35,13 @@ func DecodeTokenStr(tokenStr string) (string, int64, error) {
 }
 
 func DecodeToken(c fiber.Ctx) (string, int64, error) {
-    tokenStr := c.Get("Authorization")
-    tokenStr = strings.ReplaceAll(tokenStr, "Bearer ", "")
+    tokenStr := c.Get(fiber.HeaderAuthorization)
+    if tokenStr == "" {
+        tokenStr = c.Cookies("token")
+    } else {
+        tokenStr = strings.ReplaceAll(tokenStr, "Bearer ", "")
+    }
+    
     token, err := jwt.ParseWithClaims(tokenStr, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
         return []byte(utils.JWT_SECRET), nil
     })
