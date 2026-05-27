@@ -1,14 +1,15 @@
 package auth
 
 import (
-    "smrp/dto"
-    "smrp/middleware"
-    tokenService "smrp/service/token"
-    userService "smrp/service/user"
-    "smrp/utils"
+	"fmt"
+	"smrp/dto"
+	"smrp/middleware"
+	tokenService "smrp/service/token"
+	userService "smrp/service/user"
+	"smrp/utils"
 
-    "github.com/go-playground/validator/v10"
-    "github.com/gofiber/fiber/v3"
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v3"
 )
 
 // Login
@@ -68,7 +69,7 @@ func Login(c fiber.Ctx) error {
         Secure:   false,
         SameSite: "Lax",
         Path:     "/",
-        MaxAge:   24 * 60 * 60,
+        MaxAge:   30 * 24 * 60 * 60,
     })
 
     c.Cookie(&fiber.Cookie{
@@ -77,8 +78,8 @@ func Login(c fiber.Ctx) error {
         HTTPOnly: true,
         Secure:   false,
         SameSite: "Lax",
-        Path:     "/o/refresh-token",
-        MaxAge:   7 * 24 * 60 * 60,
+        Path:     "/smrp/o/refresh-token",
+        MaxAge:   3650 * 24 * 60 * 60,
     })
 
     return c.JSON(fiber.Map{
@@ -97,23 +98,32 @@ func Login(c fiber.Ctx) error {
 // @Success 200
 // @Router /o/refresh-token [post]
 func Refresh(c fiber.Ctx) error {
-    data := new(dto.RefreshTokenDto)
     mx := fiber.Map{
         "statusCode": fiber.StatusUnauthorized,
         "message":    "Invalid Credentials",
     }
-    if err := c.Bind().Body(data); err != nil {
-        if validationErrors, ok := err.(validator.ValidationErrors); ok {
-            errs := utils.GetValidationErrors(validationErrors)
-            if errs != nil {
-                return c.Status(fiber.StatusUnauthorized).JSON(mx)
+    refreshToken := c.Cookies("refreshToken")
+    if refreshToken == "" {
+        fmt.Println("no refresh")
+        data := new(dto.RefreshTokenDto)
+        if err := c.Bind().Body(data); err != nil {
+            if validationErrors, ok := err.(validator.ValidationErrors); ok {
+                errs := utils.GetValidationErrors(validationErrors)
+                if errs != nil {
+                    return c.Status(fiber.StatusUnauthorized).JSON(mx)
+                }
             }
+
+            return c.Status(fiber.StatusUnauthorized).JSON(mx)
         }
 
-        return c.Status(fiber.StatusUnauthorized).JSON(mx)
+        refreshToken = data.RefreshToken
+        if refreshToken == "" {
+            return c.Status(fiber.StatusUnauthorized).JSON(mx)
+        }
     }
 
-    md, err := tokenService.CreateAccessTokenFromRefreshToken(data.RefreshToken)
+    md, err := tokenService.CreateAccessTokenFromRefreshToken(refreshToken)
     if err != nil {
         return c.Status(fiber.StatusUnauthorized).JSON(mx)
     }
@@ -125,7 +135,7 @@ func Refresh(c fiber.Ctx) error {
         Secure:   false,
         SameSite: "Lax",
         Path:     "/",
-        MaxAge:   24 * 60 * 60,
+        MaxAge:   30 * 24 * 60 * 60,
     })
 
     c.Cookie(&fiber.Cookie{
@@ -134,8 +144,8 @@ func Refresh(c fiber.Ctx) error {
         HTTPOnly: true,
         Secure:   false,
         SameSite: "Lax",
-        Path:     "/o/refresh-token",
-        MaxAge:   7 * 24 * 60 * 60,
+        Path:     "/smrp/o/refresh-token",
+        MaxAge:   3650 * 24 * 60 * 60,
     })
 
     return c.JSON(fiber.Map{
