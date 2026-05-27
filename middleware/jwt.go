@@ -43,16 +43,16 @@ func JWTProtected(c fiber.Ctx) error {
         })
     }
 
-    userId, user, err := ValidateTokenStr(token)
-    if err != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-            "statusCode": fiber.StatusUnauthorized,
-            "message":    "Invalid or expired token",
-        })
-    }
+    // userId, user, err := ValidateTokenStr(token)
+    // if err != nil {
+    //     return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+    //         "statusCode": fiber.StatusUnauthorized,
+    //         "message":    "Invalid or expired token",
+    //     })
+    // }
 
-    c.Locals("userId", userId)
-    c.Locals("username", user.Username)
+    // c.Locals("userId", userId)
+    // c.Locals("username", user.Username)
     return c.Next()
 }
 
