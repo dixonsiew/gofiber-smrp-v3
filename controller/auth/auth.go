@@ -11,14 +11,14 @@ import (
     "github.com/gofiber/fiber/v3"
 )
 
-// LoginHttp
+// Login
 //
 // @Tags Auth
 // @Produce json
 // @Param request body dto.LoginDto true "Login Request"
 // @Success 200
-// @Router /o/token-http [post]
-func LoginHttp(c fiber.Ctx) error {
+// @Router /o/token [post]
+func Login(c fiber.Ctx) error {
     data := new(dto.LoginDto)
     mx := fiber.Map{
         "statusCode": fiber.StatusUnauthorized,
@@ -82,61 +82,6 @@ func LoginHttp(c fiber.Ctx) error {
     })
 
     return c.JSON(fiber.Map{
-        "message": "Login successful",
-    })
-}
-
-// Login
-//
-// @Tags Auth
-// @Produce json
-// @Param request body dto.LoginDto true "Login Request"
-// @Success 200
-// @Router /o/token [post]
-func Login(c fiber.Ctx) error {
-    data := new(dto.LoginDto)
-    mx := fiber.Map{
-        "statusCode": fiber.StatusUnauthorized,
-        "message":    "Invalid Credentials",
-    }
-    if err := c.Bind().Body(data); err != nil {
-        if validationErrors, ok := err.(validator.ValidationErrors); ok {
-            errs := utils.GetValidationErrors(validationErrors)
-            if errs != nil {
-                return c.Status(fiber.StatusUnauthorized).JSON(mx)
-            }
-        }
-
-        return c.Status(fiber.StatusUnauthorized).JSON(mx)
-    }
-
-    user, err := userService.FindByUsername(data.Username)
-    if err != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(mx)
-    }
-
-    valid := false
-    if user != nil {
-        valid = userService.ValidateCredentials(*user, data.Password)
-    }
-
-    if !valid {
-        return c.Status(fiber.StatusUnauthorized).JSON(mx)
-    }
-
-    a := *user
-    userService.UpdateLastLogin(a.Id.Int64)
-    token, err := tokenService.GenerateAccessToken(a)
-    refreshToken, errx := tokenService.GenerateRefreshToken(a)
-    if err != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(mx)
-    }
-
-    if errx != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(mx)
-    }
-
-    return c.JSON(fiber.Map{
         "type":          "bearer",
         "token":         token,
         "refresh_token": refreshToken,
@@ -174,8 +119,9 @@ func Refresh(c fiber.Ctx) error {
     }
 
     return c.JSON(fiber.Map{
-        "type":  "bearer",
-        "token": md["token"],
+        "type":         "bearer",
+        "token":        md["token"],
+        "refreshToken": md["refreshToken"],
     })
 }
 

@@ -41,7 +41,7 @@ func DecodeToken(c fiber.Ctx) (string, int64, error) {
     } else {
         tokenStr = strings.ReplaceAll(tokenStr, "Bearer ", "")
     }
-    
+
     token, err := jwt.ParseWithClaims(tokenStr, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
         return []byte(utils.JWT_SECRET), nil
     })
@@ -115,13 +115,19 @@ func CreateAccessTokenFromRefreshToken(refresh string) (fiber.Map, error) {
     }
 
     token, err := GenerateAccessToken(*user)
+    refreshToken, errx := GenerateRefreshToken(*user)
     if err != nil {
         return nil, err
     }
 
+    if errx != nil {
+        return nil, errx
+    }
+
     return fiber.Map{
-        "user":  &user,
-        "token": token,
+        "user":         &user,
+        "token":        token,
+        "refreshToken": refreshToken,
     }, nil
 }
 
