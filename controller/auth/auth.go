@@ -118,6 +118,26 @@ func Refresh(c fiber.Ctx) error {
         return c.Status(fiber.StatusUnauthorized).JSON(mx)
     }
 
+    c.Cookie(&fiber.Cookie{
+        Name:     "token",
+        Value:    md["token"].(string),
+        HTTPOnly: true,
+        Secure:   false,
+        SameSite: "Lax",
+        Path:     "/",
+        MaxAge:   24 * 60 * 60,
+    })
+
+    c.Cookie(&fiber.Cookie{
+        Name:     "refreshToken",
+        Value:    md["refreshToken"].(string),
+        HTTPOnly: true,
+        Secure:   false,
+        SameSite: "Lax",
+        Path:     "/o/refresh-token",
+        MaxAge:   7 * 24 * 60 * 60,
+    })
+
     return c.JSON(fiber.Map{
         "type":         "bearer",
         "token":        md["token"],
