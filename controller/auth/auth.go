@@ -104,7 +104,6 @@ func Refresh(c fiber.Ctx) error {
     }
     refreshToken := c.Cookies("refreshToken")
     if refreshToken == "" {
-        fmt.Println("no refresh")
         data := new(dto.RefreshTokenDto)
         if err := c.Bind().Body(data); err != nil {
             if validationErrors, ok := err.(validator.ValidationErrors); ok {
