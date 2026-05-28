@@ -4384,8 +4384,6 @@ paths:
       responses:
         "200":
           description: OK
-      security:
-      - BearerAuth: []
       tags:
       - Auth
   /o/token:

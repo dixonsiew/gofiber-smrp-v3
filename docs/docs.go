@@ -7044,11 +7044,6 @@ const docTemplate = `{
         },
         "/o/refresh-token": {
             "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "produces": [
                     "application/json"
                 ],

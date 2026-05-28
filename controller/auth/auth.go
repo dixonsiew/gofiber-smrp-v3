@@ -1,15 +1,14 @@
 package auth
 
 import (
-	"fmt"
-	"smrp/dto"
-	"smrp/middleware"
-	tokenService "smrp/service/token"
-	userService "smrp/service/user"
-	"smrp/utils"
+    "smrp/dto"
+    "smrp/middleware"
+    tokenService "smrp/service/token"
+    userService "smrp/service/user"
+    "smrp/utils"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v3"
+    "github.com/go-playground/validator/v10"
+    "github.com/gofiber/fiber/v3"
 )
 
 // Login
@@ -94,7 +93,6 @@ func Login(c fiber.Ctx) error {
 // @Tags Auth
 // @Produce json
 // @Param request body dto.RefreshTokenDto true "Refresh Token Request"
-// @Security BearerAuth
 // @Success 200
 // @Router /o/refresh-token [post]
 func Refresh(c fiber.Ctx) error {
