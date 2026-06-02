@@ -4370,6 +4370,15 @@ paths:
       - BearerAuth: []
       tags:
       - Setup/WardClass
+  /o/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      tags:
+      - Auth
   /o/refresh-token:
     post:
       parameters:

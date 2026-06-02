@@ -7042,6 +7042,21 @@ const docTemplate = `{
                 }
             }
         },
+        "/o/logout": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/o/refresh-token": {
             "post": {
                 "produces": [
