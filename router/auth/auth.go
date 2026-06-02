@@ -8,6 +8,7 @@ import (
 )
 
 func SetupRoutes(router fiber.Router) {
+    router.Post("/o/logout", auth.Logout)
     router.Post("/o/token", auth.Login)
     router.Post("/o/refresh-token", auth.Refresh)
     router.Get("/api/current-user", middleware.JWTProtected, auth.UserDetails)

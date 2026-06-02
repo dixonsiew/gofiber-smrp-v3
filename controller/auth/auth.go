@@ -6,10 +6,45 @@ import (
     tokenService "smrp/service/token"
     userService "smrp/service/user"
     "smrp/utils"
+    "time"
 
     "github.com/go-playground/validator/v10"
     "github.com/gofiber/fiber/v3"
 )
+
+// Logout
+//
+// @Tags Auth
+// @Produce json
+// @Success 200
+// @Router /o/logout [post]
+func Logout(c fiber.Ctx) error {
+    c.Cookie(&fiber.Cookie{
+        Name:     "token",
+        Value:    "",
+        HTTPOnly: true,
+        Secure:   false,
+        SameSite: "Lax",
+        Path:     "/",
+        MaxAge:   -1,
+        Expires:  time.Now().Add(-1 * time.Hour),
+    })
+
+    c.Cookie(&fiber.Cookie{
+        Name:     "refreshToken",
+        Value:    "",
+        HTTPOnly: true,
+        Secure:   false,
+        SameSite: "Lax",
+        Path:     "/smrp/o/refresh-token",
+        MaxAge:   -1,
+        Expires:  time.Now().Add(-1 * time.Hour),
+    })
+
+    return c.JSON(fiber.Map{
+        "message": "Logged out successfully",
+    })
+}
 
 // Login
 //
