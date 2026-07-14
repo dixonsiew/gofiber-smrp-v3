@@ -1,6 +1,6 @@
 module smrp
 
-go 1.25.0
+go 1.26.0
 
 require (
 	github.com/go-playground/validator/v10 v10.30.3
@@ -9,13 +9,13 @@ require (
 	github.com/rs/zerolog v1.35.1
 	github.com/swaggo/swag v1.16.6
 	github.com/ztrue/tracerr v0.4.0
-	golang.org/x/crypto v0.53.0
+	golang.org/x/crypto v0.54.0
 )
 
 require (
 	github.com/nleeper/goment v1.4.4
 	github.com/xuri/excelize/v2 v2.11.0
-	go.mongodb.org/mongo-driver/v2 v2.7.0
+	go.mongodb.org/mongo-driver/v2 v2.8.0
 )
 
 require (
@@ -26,8 +26,8 @@ require (
 	github.com/go-openapi/swag/stringutils v0.27.0 // indirect
 	github.com/go-openapi/swag/typeutils v0.27.0 // indirect
 	github.com/go-openapi/swag/yamlutils v0.27.0 // indirect
-	github.com/gofiber/schema v1.8.1 // indirect
-	github.com/gofiber/utils/v2 v2.1.1 // indirect
+	github.com/gofiber/schema v1.8.2 // indirect
+	github.com/gofiber/utils/v2 v2.1.2 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/richardlehane/mscfb v1.0.7 // indirect
@@ -75,9 +75,9 @@ require (
 	github.com/swaggo/files/v2 v2.0.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.72.0 // indirect
-	golang.org/x/net v0.56.0 // indirect
+	golang.org/x/net v0.57.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.40.0 // indirect
-	golang.org/x/tools v0.47.0 // indirect
+	golang.org/x/tools v0.48.0 // indirect
 )
