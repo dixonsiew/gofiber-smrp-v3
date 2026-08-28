@@ -15,7 +15,7 @@ require (
 require (
 	github.com/nleeper/goment v1.4.4
 	github.com/xuri/excelize/v2 v2.11.0
-	go.mongodb.org/mongo-driver/v2 v2.8.1
+	go.mongodb.org/mongo-driver/v2 v2.8.2
 )
 
 require (
@@ -51,7 +51,7 @@ require (
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
-	github.com/andybalholm/brotli v1.2.2 // indirect
+	github.com/andybalholm/brotli v1.2.3 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
 	github.com/go-openapi/jsonpointer v1.0.0 // indirect
 	github.com/go-openapi/jsonreference v1.0.1 // indirect
@@ -59,8 +59,8 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/gofiber/contrib/v3/jwt v1.2.1
-	github.com/gofiber/contrib/v3/swaggo v1.0.9
-	github.com/gofiber/contrib/v3/zerolog v1.1.3
+	github.com/gofiber/contrib/v3/swaggo v1.0.10
+	github.com/gofiber/contrib/v3/zerolog v1.1.4
 	github.com/gofiber/fiber/v3 v3.5.0
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/guregu/null/v6 v6.0.0
