@@ -4,7 +4,7 @@ package router
 
 import (
 	"smrp/router/auth"
-    "smrp/router/report"
+        "smrp/router/report"
 	"smrp/router/setup"
 
 	"github.com/gofiber/fiber/v3"
