@@ -91,6 +91,7 @@ func GetDateStr(v any) string {
     o := ""
     k := reflect.TypeOf(v)
     if k.String() == "bson.DateTime" {
+        o = GetStr(v)
         iv, _ := strconv.Atoi(o)
         t := time.UnixMilli(int64(iv))
         g, _ := goment.New(t)
