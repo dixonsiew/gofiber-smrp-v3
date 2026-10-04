@@ -105,11 +105,39 @@ func GetDateStr(v any) string {
     if len(o) >= 10 {
         i := strings.Index(s, "/")
         if i > 0 {
+            s = strings.Split(s, " ")[0]
             g, _ := goment.New(s, "D/M/YYYY")
             gs := g.Format("YYYY-MM-DD")
             o = gs
+        } else {
+            i = strings.Index(s, "-")
+            if i > 0 {
+                s = strings.Split(s, " ")[0]
+                g, _ := goment.New(s, "D-M-YYYY")
+                gs := g.Format("YYYY-MM-DD")
+                o = gs
+            }
         }
-        s = o[0:10]
+
+        s = strings.Split(o, " ")[0]
+    } else {
+        i := strings.Index(s, "/")
+        if i > 0 {
+            s = strings.Split(s, " ")[0]
+            g, _ := goment.New(s, "D/M/YYYY")
+            gs := g.Format("YYYY-MM-DD")
+            o = gs
+        } else {
+            i = strings.Index(s, "-")
+            if i > 0 {
+                s = strings.Split(s, " ")[0]
+                g, _ := goment.New(s, "D-M-YYYY")
+                gs := g.Format("YYYY-MM-DD")
+                o = gs
+            }
+        }
+
+        s = strings.Split(o, " ")[0]
     }
 
     return s
