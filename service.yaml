@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: gofiber-smrp
-        image: gofiber-smrp:1.0
+        image: gofiber-smrp:1.2
         ports:
         - containerPort: 8100
         readinessProbe:

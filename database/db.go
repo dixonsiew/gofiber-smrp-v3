@@ -36,7 +36,7 @@ func GetCtx() context.Context {
 
 func ConnectDB() {
     name := config.Config("postgres.db")
-    connStr := fmt.Sprintf("postgres://postgres:postgres@postgres-service:5432/%s?sslmode=disable", name)
+    connStr := fmt.Sprintf("postgres://postgres:postgres@postgres-service.default.svc.cluster.local:5432/%s?sslmode=disable", name)
     db, err := sqlx.Connect("postgres", connStr)
     if err != nil {
         utils.LogError(err)
