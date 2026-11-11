@@ -3,10 +3,13 @@ package main
 // https://betterstack.com/community/guides/scaling-go/postgresql-pgx-golang/
 
 import (
+    "context"
     "errors"
     "fmt"
     "html/template"
     "os"
+    "os/signal"
+    "syscall"
     "smrp/config"
     "smrp/database"
     _ "smrp/docs"
@@ -80,15 +83,27 @@ func main() {
     basePath := "smrp"
     initSwagger(app, basePath)
     app.Get(healthcheck.StartupEndpoint, healthcheck.New())
-    app.Get(fmt.Sprintf("/%s/healthz", basePath), healthcheck.New())
+    app.Get(fmt.Sprintf("/%s/healthz", basePath), func (c fiber.Ctx) error {
+        return c.SendStatus(fiber.StatusOK)
+    })
     router.SetupRoutes(app)
 
-    err := app.Listen(fmt.Sprintf(":%s", port), fiber.ListenConfig{
-        EnablePrefork: true,
-    })
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+    defer stop()
 
-    if err != nil {
-        utils.Logger.Fatal().Err(err).Msg("Fiber app error")
+    go func() {
+        err := app.Listen(fmt.Sprintf(":%s", port), fiber.ListenConfig{
+            EnablePrefork: true,
+        })
+
+        if err != nil {
+            utils.Logger.Fatal().Err(err).Msg("Fiber app error")
+        }
+    }()
+
+    <-ctx.Done()
+    if err := app.ShutdownWithContext(ctx); err != nil {
+        utils.Logger.Fatal().Err(err).Msg("Shutdown error")
     }
 }
 

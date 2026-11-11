@@ -36,7 +36,7 @@ func GetCtx() context.Context {
 
 func ConnectDB() {
     name := config.Config("postgres.db")
-    connStr := fmt.Sprintf("postgres://postgres:postgres@localhost:5432/%s?sslmode=disable", name)
+    connStr := fmt.Sprintf("postgres://postgres:postgres@postgres-service:5432/%s?sslmode=disable", name)
     db, err := sqlx.Connect("postgres", connStr)
     if err != nil {
         utils.LogError(err)
@@ -54,7 +54,7 @@ func CloseDB() {
 }
 
 func ConnectMongo() {
-    clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+    clientOptions := options.Client().ApplyURI("mongodb://mongodb-service:27017")
     client, err := mongo.Connect(clientOptions)
     if err != nil {
         utils.LogError(err)
