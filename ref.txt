@@ -1,8 +1,8 @@
-docker build -t gofiber-smrp:1.2 .
+docker build -t docker.io/wfsiew888/smrp-gofiber:1.0.0 .
 
 docker tag gofiber-smrp:1.2 docker.io/wfsiew888/gofiber-smrp:1.2
-docker push docker.io/wfsiew888/gofiber-smrp:1.2
+docker push docker.io/wfsiew888/smrp-gofiber:1.0.0
 
-kubectl apply -f service.yaml
+kubectl apply -f deployment.yaml
 
-kubectl port-forward service/gofiber-smrp-service 8100:8100 --address="0.0.0.0"
+kubectl port-forward service/smrp-gofiber 8100:8100 --address="0.0.0.0"
