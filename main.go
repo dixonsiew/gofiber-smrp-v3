@@ -64,7 +64,7 @@ func main() {
     app.Use(compress.New())
     app.Use(cors.New(cors.Config{
         AllowCredentials: true,
-        AllowOrigins:  []string{"http://localhost:3000", "http://localhost:5000"},
+        AllowOrigins:  []string{"http://localhost:3000", "http://localhost:5000", "http://localhost:8080"},
         ExposeHeaders: []string{"Authorization", "filename", utils.X_TOTAL_COUNT, utils.X_TOTAL_PAGE},
     }))
     app.Use(fiberzerolog.New(fiberzerolog.Config{

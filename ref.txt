@@ -6,3 +6,8 @@ docker push docker.io/wfsiew888/smrp-gofiber:1.0.0
 kubectl apply -f deployment.yaml
 
 kubectl port-forward service/smrp-gofiber 8100:8100 --address="0.0.0.0"
+
+---
+
+kubectl delete service smrp-gofiber
+kubectl delete deployment smrp-gofiber
