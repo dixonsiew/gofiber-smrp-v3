@@ -3,6 +3,7 @@ package database
 import (
     "context"
     "fmt"
+    "os"
     "smrp/config"
     "smrp/utils"
     "time"
@@ -35,8 +36,13 @@ func GetCtx() context.Context {
 }
 
 func ConnectDB() {
+    host := os.Getenv("DB_HOST")
+    if host == "" {
+        host = "localhost"
+    }
     name := config.Config("postgres.db")
-    connStr := fmt.Sprintf("postgres://postgres:postgres@postgres-service.default.svc.cluster.local:5432/%s?sslmode=disable", name)
+    connStr := fmt.Sprintf("postgres://postgres:postgres@%s:5432/%s?sslmode=disable", host, name)
+    // connStr := fmt.Sprintf("postgres://postgres:postgres@postgres-service.default.svc.cluster.local:5432/%s?sslmode=disable", name)
     db, err := sqlx.Connect("postgres", connStr)
     if err != nil {
         utils.LogError(err)
@@ -54,7 +60,12 @@ func CloseDB() {
 }
 
 func ConnectMongo() {
-    clientOptions := options.Client().ApplyURI("mongodb://mongodb-service:27017")
+    host := os.Getenv("MONGODB_HOST")
+    if host == "" {
+        host = "localhost"
+    }
+    s := fmt.Sprintf("mongodb://%s:27017", host)
+    clientOptions := options.Client().ApplyURI(s)
     client, err := mongo.Connect(clientOptions)
     if err != nil {
         utils.LogError(err)

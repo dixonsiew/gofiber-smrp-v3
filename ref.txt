@@ -3,6 +3,8 @@ docker build -t docker.io/wfsiew888/smrp-gofiber:1.0.0 .
 docker tag gofiber-smrp:1.2 docker.io/wfsiew888/gofiber-smrp:1.2
 docker push docker.io/wfsiew888/smrp-gofiber:1.0.0
 
+kubectl apply -f deployment.yaml
+
 kubectl port-forward service/smrp-gofiber 8100:80 --address="0.0.0.0"
 
 ---
@@ -10,7 +12,7 @@ kubectl port-forward service/smrp-gofiber 8100:80 --address="0.0.0.0"
 minikube
 
 docker build -t smrp-gofiber:1.0.0 .
-kubectl apply -f deployment.yaml
+kubectl apply -f minikube.yaml
 
 minikube cache delete smrp-gofiber:1.0.0
 minikube image rm smrp-gofiber:1.0.0

@@ -1,0 +1,1 @@
+kubectl port-forward service/smrp-gofiber 8100:80 --address="0.0.0.0"
